@@ -1,13 +1,111 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum NotificationType {
+  ASSIGNED
+  DUE
+  COMPLETED
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  fullName      String         @map("full_name") @db.VarChar(100)
+  email         String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(255)
+  role          Role
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @default(now()) @updatedAt @map("updated_at")
+
+  employee      Employee?
+  tasksCreated  Task[]         @relation("CreatedTasks")
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model Employee {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique @map("user_id")
+  department  String   @db.VarChar(100)
+  designation String   @db.VarChar(100)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user        User     @relation(fields: [userId], references: [id])
+  tasks       Task[]   @relation("AssignedTasks")
+
+  @@map("employees")
+}
+
+model Task {
+  id                 Int       @id @default(autoincrement())
+  title              String    @db.VarChar(255)
+  description        String?   @db.Text
+  priority           Priority
+  status             Status    @default(PENDING)
+  startDate          DateTime? @map("start_date") @db.Date
+  dueDate            DateTime? @map("due_date") @db.Date
+  assignedEmployeeId Int?      @map("assigned_employee_id")
+  createdBy          Int       @map("created_by")
+  completedAt        DateTime? @map("completed_at") @db.DateTime
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  assignedEmployee   Employee? @relation("AssignedTasks", fields: [assignedEmployeeId], references: [id])
+  creator            User      @relation("CreatedTasks", fields: [createdBy], references: [id])
+  notifications      Notification[]
+  attachments        Attachment[]
+
+  @@map("tasks")
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    Int              @map("user_id")
+  taskId    Int              @map("task_id")
+  type      NotificationType
+  message   String?          @db.Text
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user      User             @relation(fields: [userId], references: [id])
+  task      Task             @relation(fields: [taskId], references: [id])
+
+  @@map("notifications")
+}
+
+model Attachment {
+  id        Int      @id @default(autoincrement())
+  taskId    Int      @map("task_id")
+  fileName  String?  @map("file_name") @db.VarChar(255)
+  fileUrl   String?  @map("file_url") @db.VarChar(255)
+  fileType  String?  @map("file_type") @db.VarChar(20)
+  fileSize  Int?     @map("file_size")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  task      Task     @relation(fields: [taskId], references: [id])
+
+  @@map("attachments")
 }
