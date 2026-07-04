@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+console.log("Loading DB config...");
+
 export const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
   user: process.env.DB_USER || "root",

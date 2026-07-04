@@ -8,7 +8,12 @@ import { generateAccessToken } from "../utils/jwt.util.js";
 import { AppError } from "../utils/AppError.js";
 import type { UserPayload } from "../types/auth.js";
 
-export const register = async (data: Record<string, string>) => {
+export const register = async (data: {
+  fullName: string;
+  email: string;
+  password: string;
+  role: string;
+}) => {
   const { fullName, email, password, role } = data;
 
   const existingUser = await findUserByEmail(email);
@@ -28,7 +33,7 @@ export const register = async (data: Record<string, string>) => {
   };
 };
 
-export const login = async (data: Record<string, string>) => {
+export const login = async (data: { email: string; password: string }) => {
   const { email, password } = data;
 
   const user = await findUserByEmail(email);
@@ -36,7 +41,7 @@ export const login = async (data: Record<string, string>) => {
     throw new AppError("Invalid email or password", 401);
   }
 
-  const isMatch = await comparePassword(password, user.password_hash);
+  const isMatch = await comparePassword(password, user.passwordHash);
   if (!isMatch) {
     throw new AppError("Invalid email or password", 401);
   }
@@ -52,7 +57,7 @@ export const login = async (data: Record<string, string>) => {
   return {
     user: {
       id: user.id,
-      fullName: user.full_name,
+      fullName: user.fullName,
       email: user.email,
       role: user.role,
     },
@@ -68,7 +73,7 @@ export const getMe = async (userId: number) => {
 
   return {
     id: user.id,
-    fullName: user.full_name,
+    fullName: user.fullName,
     email: user.email,
     role: user.role,
   };

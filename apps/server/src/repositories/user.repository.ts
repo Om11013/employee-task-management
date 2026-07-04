@@ -3,9 +3,9 @@ import type { RowDataPacket, ResultSetHeader } from "mysql2";
 
 export interface UserRow extends RowDataPacket {
   id: number;
-  full_name: string;
+  fullName: string;
   email: string;
-  password_hash: string;
+  passwordHash: string;
   role: "ADMIN" | "EMPLOYEE";
 }
 
@@ -34,7 +34,7 @@ export const createUser = async (
   role: string,
 ): Promise<number> => {
   const [result] = await pool.query<ResultSetHeader>(
-    "INSERT INTO users (full_name, email, password_hash, role) VALUES (?, ?, ?, ?)",
+    "INSERT INTO users (fullName, email, passwordHash, role) VALUES (?, ?, ?, ?)",
     [fullName, email, passwordHash, role],
   );
   return result.insertId;
