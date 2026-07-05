@@ -1,8 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../utils/jwt.util.js";
+import { isTokenBlacklisted } from "../repositories/user.repository.js";
 import { AppError } from "../utils/AppError.js";
 
-export const authenticate = (
+export const authenticate = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -10,16 +11,23 @@ export const authenticate = (
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new AppError("Unauthorized: No token provided", 401);
+      throw new AppError("No token provided", 401);
     }
 
     const token = authHeader.split(" ")[1] as string;
+
+    // Check if token is blacklisted
+    const blacklisted = await isTokenBlacklisted(token);
+    if (blacklisted) {
+      throw new AppError("Token is invalidated", 401);
+    }
+
     const decoded = verifyAccessToken(token);
 
     req.user = decoded;
     next();
   } catch {
-    next(new AppError("Unauthorized: Invalid token", 401));
+    next(new AppError("Invalid or expired token", 401));
   }
 };
 

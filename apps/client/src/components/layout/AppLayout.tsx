@@ -3,6 +3,7 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { getUser, clearAuth } from "../../utils/auth.utils";
 import { NotificationDropdown } from "../../features/notification/components/NotificationDropdown";
+import * as authService from "../../services/auth/auth.service";
 
 export const AppLayout = () => {
   const navigate = useNavigate();
@@ -10,10 +11,16 @@ export const AppLayout = () => {
   const user = getUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const handleLogout = () => {
-    clearAuth();
-    queryClient.clear();
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error("Logout failed on server:", error);
+    } finally {
+      clearAuth();
+      queryClient.clear();
+      navigate("/login");
+    }
   };
 
   const navLinks = [

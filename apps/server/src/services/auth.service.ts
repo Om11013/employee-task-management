@@ -78,3 +78,15 @@ export const getMe = async (userId: number) => {
     role: user.role,
   };
 };
+
+import jwt from "jsonwebtoken";
+import { blacklistToken } from "../repositories/user.repository.js";
+
+export const logout = async (token: string) => {
+  const decoded = jwt.decode(token) as { exp?: number } | null;
+
+  if (decoded && decoded.exp) {
+    const expiresAt = new Date(decoded.exp * 1000);
+    await blacklistToken(token, expiresAt);
+  }
+};
