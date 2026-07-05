@@ -10,6 +10,7 @@ const config: PoolConfig = {
   connectionLimit: 5,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const adapter = new PrismaMariaDb(config as any);
 
 const prisma = new PrismaClient({
