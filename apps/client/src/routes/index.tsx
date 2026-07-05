@@ -1,11 +1,15 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PublicRoute } from "./PublicRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { AdminRoute } from "./AdminRoute";
 
 import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 
 import Dashboard from "../pages/Dashboard";
+import { AppLayout } from "../components/layout/AppLayout";
+import Employees from "../features/employee/pages/Employees";
+import Tasks from "../features/task/pages/Tasks";
 
 export const router = createBrowserRouter([
   {
@@ -21,7 +25,26 @@ export const router = createBrowserRouter([
   },
   {
     element: <ProtectedRoute />,
-    children: [{ path: "/dashboard", element: <Dashboard /> }],
+    children: [
+      {
+        element: <AppLayout />,
+        children: [
+          { path: "/dashboard", element: <Dashboard /> },
+          {
+            element: <AdminRoute />,
+            children: [{ path: "/employees", element: <Employees /> }],
+          },
+          {
+            path: "/tasks",
+            element: <Tasks />,
+          },
+          {
+            path: "/reports",
+            element: <div className="p-8">Reports (Coming Soon)</div>,
+          },
+        ],
+      },
+    ],
   },
   {
     path: "*",
