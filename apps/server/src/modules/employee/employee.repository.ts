@@ -86,9 +86,15 @@ export const updateEmployeeRecord = async (
       ...(data.department || data.designation
         ? {
             employee: {
-              update: {
-                ...(data.department && { department: data.department }),
-                ...(data.designation && { designation: data.designation }),
+              upsert: {
+                create: {
+                  department: data.department || "Unassigned",
+                  designation: data.designation || "Unassigned",
+                },
+                update: {
+                  ...(data.department && { department: data.department }),
+                  ...(data.designation && { designation: data.designation }),
+                },
               },
             },
           }

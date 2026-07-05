@@ -25,9 +25,9 @@ enum Status {
 }
 
 enum NotificationType {
-  ASSIGNED
-  DUE
-  COMPLETED
+  ASSIGNED  @map("TASK_ASSIGNED")
+  DUE       @map("TASK_DUE")
+  COMPLETED @map("TASK_COMPLETED")
 }
 
 model User {
@@ -84,12 +84,12 @@ model Task {
 
 model Notification {
   id        Int              @id @default(autoincrement())
-  userId    Int              @map("user_id")
-  taskId    Int              @map("task_id")
+  userId    Int              
+  taskId    Int              
   type      NotificationType
   message   String?          @db.Text
-  isRead    Boolean          @default(false) @map("is_read")
-  createdAt DateTime         @default(now()) @map("created_at")
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now()) 
 
   user      User             @relation(fields: [userId], references: [id])
   task      Task             @relation(fields: [taskId], references: [id])
@@ -99,12 +99,12 @@ model Notification {
 
 model Attachment {
   id        Int      @id @default(autoincrement())
-  taskId    Int      @map("task_id")
-  fileName  String?  @map("file_name") @db.VarChar(255)
-  fileUrl   String?  @map("file_url") @db.VarChar(255)
-  fileType  String?  @map("file_type") @db.VarChar(20)
-  fileSize  Int?     @map("file_size")
-  createdAt DateTime @default(now()) @map("created_at")
+  taskId    Int      
+  fileName  String?  @db.VarChar(255)
+  fileUrl   String?  @db.VarChar(255)
+  fileType  String?  @db.VarChar(20)
+  fileSize  Int?     
+  createdAt DateTime @default(now()) 
 
   task      Task     @relation(fields: [taskId], references: [id])
 

@@ -9,6 +9,7 @@ import { TaskPriority, TaskStatus } from "../types";
 import { useCreateTask, useUpdateTask } from "../hooks/useTasks";
 import { useEmployees } from "../../employee/hooks/useEmployees";
 import { useAuth } from "../../../hooks/useAuth";
+
 const schema = z
   .object({
     title: z.string().min(1, "Title is required"),
@@ -257,11 +258,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             disabled={isCompleted || isPending}
           >
             <option value="">Select Employee</option>
-            {employeeData?.items.map((emp) => (
-              <option key={emp.id} value={emp.id}>
-                {emp.fullName}
-              </option>
-            ))}
+            {employeeData?.items
+              .filter((emp) => emp.id)
+              .map((emp) => (
+                <option key={emp.id} value={emp.id}>
+                  {emp.fullName}
+                </option>
+              ))}
           </select>
           {errors.assignedEmployeeId && (
             <p className="text-sm text-red-500">

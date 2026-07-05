@@ -14,7 +14,8 @@ import type {
 } from "./task.types.js";
 import prisma from "../../../prisma/prisma.js";
 
-import { Status } from "@prisma/client";
+import { Status, NotificationType } from "@prisma/client";
+import { createNotification } from "../notification/notification.service.js";
 
 // Helper to format Prisma response to TaskResponse
 const formatTaskResponse = (
@@ -78,6 +79,17 @@ export const createTask = async (data: CreateTaskDTO, createdBy: number) => {
   }
 
   const newTask = await createTaskRecord(data, createdBy);
+
+  // Trigger Notification
+  if (employee.userId) {
+    await createNotification({
+      userId: employee.userId,
+      taskId: newTask.id,
+      type: NotificationType.ASSIGNED,
+      message: `You have been assigned a new task: "${newTask.title}"`,
+    });
+  }
+
   return formatTaskResponse(newTask);
 };
 
@@ -102,11 +114,42 @@ export const updateTask = async (id: number, data: UpdateTaskDTO) => {
 
   let completedAt: Date | null | undefined = undefined;
 
+  const isNewlyCompleted = data.status === Status.COMPLETED;
+
   if (data.status === Status.COMPLETED) {
     completedAt = new Date();
   }
 
   const updatedTask = await updateTaskRecord(id, data, completedAt);
+
+  // Trigger Assignment Notification if reassigned
+  if (
+    data.assignedEmployeeId &&
+    data.assignedEmployeeId !== task.assignedEmployeeId
+  ) {
+    const newEmployee = await prisma.employee.findUnique({
+      where: { id: data.assignedEmployeeId },
+    });
+    if (newEmployee?.userId) {
+      await createNotification({
+        userId: newEmployee.userId,
+        taskId: updatedTask.id,
+        type: NotificationType.ASSIGNED,
+        message: `You have been assigned to task: "${updatedTask.title}"`,
+      });
+    }
+  }
+
+  // Trigger Completion Notification to task creator
+  if (isNewlyCompleted && task.creator?.id) {
+    await createNotification({
+      userId: task.creator.id,
+      taskId: updatedTask.id,
+      type: NotificationType.COMPLETED,
+      message: `Task "${updatedTask.title}" has been completed by ${task.assignedEmployee?.user?.fullName || "an employee"}.`,
+    });
+  }
+
   return formatTaskResponse(updatedTask);
 };
 

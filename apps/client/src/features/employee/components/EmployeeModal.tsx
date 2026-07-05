@@ -99,7 +99,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           department: data.department,
           designation: data.designation,
         };
-        await updateEmployee({ id: employee.id, payload });
+        await updateEmployee({ id: employee.userId, payload });
       } else {
         await createEmployee(data as CreateEmployeePayload);
       }
