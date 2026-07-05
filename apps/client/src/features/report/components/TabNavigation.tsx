@@ -1,5 +1,3 @@
-import React from "react";
-
 export type TabType = "all" | "completed" | "pending" | "employee";
 
 interface Props {

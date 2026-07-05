@@ -39,3 +39,21 @@ export const createUser = async (
   );
   return result.insertId;
 };
+
+import prisma from "../../prisma/prisma.js";
+
+export const blacklistToken = async (token: string, expiresAt: Date) => {
+  return prisma.blacklistedToken.create({
+    data: {
+      token,
+      expiresAt,
+    },
+  });
+};
+
+export const isTokenBlacklisted = async (token: string) => {
+  const count = await prisma.blacklistedToken.count({
+    where: { token },
+  });
+  return count > 0;
+};

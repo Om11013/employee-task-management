@@ -1,4 +1,3 @@
-import React from "react";
 import type { EmployeeSummary } from "../types";
 
 interface Props {

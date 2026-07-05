@@ -110,3 +110,12 @@ model Attachment {
 
   @@map("attachments")
 }
+
+model BlacklistedToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @db.Text
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("blacklisted_tokens")
+}
