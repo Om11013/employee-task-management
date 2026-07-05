@@ -32,12 +32,12 @@ enum NotificationType {
 
 model User {
   id            Int            @id @default(autoincrement())
-  fullName      String         @map("full_name") @db.VarChar(100)
+  fullName      String         @db.VarChar(150)
   email         String         @unique @db.VarChar(255)
-  password      String         @db.VarChar(255)
+  password      String         @map("passwordHash") @db.VarChar(255)
   role          Role
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @default(now()) @updatedAt @map("updated_at")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
 
   employee      Employee?
   tasksCreated  Task[]         @relation("CreatedTasks")
@@ -48,11 +48,11 @@ model User {
 
 model Employee {
   id          Int      @id @default(autoincrement())
-  userId      Int      @unique @map("user_id")
+  userId      Int      @unique
   department  String   @db.VarChar(100)
   designation String   @db.VarChar(100)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 
   user        User     @relation(fields: [userId], references: [id])
   tasks       Task[]   @relation("AssignedTasks")
@@ -66,13 +66,13 @@ model Task {
   description        String?   @db.Text
   priority           Priority
   status             Status    @default(PENDING)
-  startDate          DateTime? @map("start_date") @db.Date
-  dueDate            DateTime? @map("due_date") @db.Date
-  assignedEmployeeId Int?      @map("assigned_employee_id")
-  createdBy          Int       @map("created_by")
-  completedAt        DateTime? @map("completed_at") @db.DateTime
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at")
+  startDate          DateTime? @db.Date
+  dueDate            DateTime? @db.Date
+  assignedEmployeeId Int?      
+  createdBy          Int       
+  completedAt        DateTime? @db.DateTime
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @default(now()) @updatedAt
 
   assignedEmployee   Employee? @relation("AssignedTasks", fields: [assignedEmployeeId], references: [id])
   creator            User      @relation("CreatedTasks", fields: [createdBy], references: [id])

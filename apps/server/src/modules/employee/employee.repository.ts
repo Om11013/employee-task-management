@@ -7,7 +7,9 @@ import type {
 } from "./employee.types.js";
 
 export const findEmployees = async (query: GetEmployeesQuery) => {
-  const { page, limit, search, sortBy, sortOrder } = query;
+  const { search, sortBy, sortOrder } = query;
+  const page = Number(query.page || 1);
+  const limit = Number(query.limit || 10);
   const skip = (page - 1) * limit;
 
   const where: Prisma.UserWhereInput = {

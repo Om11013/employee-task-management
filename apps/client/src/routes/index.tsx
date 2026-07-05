@@ -9,6 +9,7 @@ import Signup from "../pages/auth/Signup";
 import Dashboard from "../pages/Dashboard";
 import { AppLayout } from "../components/layout/AppLayout";
 import Employees from "../features/employee/pages/Employees";
+import Tasks from "../features/task/pages/Tasks";
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +36,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "/tasks",
-            element: <div className="p-8">Tasks (Coming Soon)</div>,
+            element: <Tasks />,
           },
           {
             path: "/reports",

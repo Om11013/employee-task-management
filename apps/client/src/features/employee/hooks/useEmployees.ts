@@ -13,11 +13,15 @@ export const employeeKeys = {
   list: (params: GetEmployeesParams) => ["employees", "list", params] as const,
 };
 
-export const useEmployees = (params: GetEmployeesParams) => {
+export const useEmployees = (
+  params: GetEmployeesParams,
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
     queryKey: employeeKeys.list(params),
     queryFn: () => fetchEmployees(params),
     placeholderData: (previousData) => previousData,
+    ...options,
   });
 };
 
