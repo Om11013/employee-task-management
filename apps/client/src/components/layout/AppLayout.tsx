@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { getUser, clearAuth } from "../../utils/auth.utils";
+import { NotificationDropdown } from "../../features/notification/components/NotificationDropdown";
 
 export const AppLayout = () => {
   const navigate = useNavigate();
@@ -29,33 +30,36 @@ export const AppLayout = () => {
       {/* Mobile Header & Hamburger */}
       <div className="md:hidden flex items-center justify-between bg-white p-4 shadow-sm z-20">
         <h1 className="text-xl font-bold text-blue-600">TaskFlow</h1>
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="text-gray-600 focus:outline-none"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="flex items-center space-x-2">
+          {user && <NotificationDropdown />}
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-gray-600 focus:outline-none"
           >
-            {isSidebarOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isSidebarOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Sidebar */}
@@ -99,17 +103,20 @@ export const AppLayout = () => {
 
           <div className="flex items-center space-x-6">
             {user && (
-              <div className="flex items-center space-x-3">
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900 leading-none">
-                    {user.fullName}
-                  </p>
-                  <span className="inline-block mt-1 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                    {user.role}
-                  </span>
-                </div>
-                <div className="h-10 w-10 rounded-full bg-linear-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
-                  {user.fullName.charAt(0).toUpperCase()}
+              <div className="flex items-center space-x-4">
+                <NotificationDropdown />
+                <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-gray-900 leading-none">
+                      {user.fullName}
+                    </p>
+                    <span className="inline-block mt-1 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                      {user.role}
+                    </span>
+                  </div>
+                  <div className="h-10 w-10 rounded-full bg-linear-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                    {user.fullName.charAt(0).toUpperCase()}
+                  </div>
                 </div>
               </div>
             )}

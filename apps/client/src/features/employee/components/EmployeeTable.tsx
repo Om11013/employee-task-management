@@ -87,7 +87,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
         <tbody className="bg-white divide-y divide-gray-200">
           {employees.map((employee) => (
             <tr
-              key={employee.id}
+              key={employee.userId}
               className="hover:bg-gray-50 transition-colors"
             >
               <td className="px-6 py-4 whitespace-nowrap">
@@ -121,7 +121,9 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(employee.id, employee.fullName)}
+                  onClick={() =>
+                    handleDelete(employee.userId, employee.fullName)
+                  }
                   disabled={isDeleting}
                   className="text-red-600 hover:text-red-900 disabled:opacity-50"
                 >

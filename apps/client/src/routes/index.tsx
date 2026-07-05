@@ -10,6 +10,7 @@ import Dashboard from "../pages/Dashboard";
 import { AppLayout } from "../components/layout/AppLayout";
 import Employees from "../features/employee/pages/Employees";
 import Tasks from "../features/task/pages/Tasks";
+import { Reports } from "../features/report/pages/Reports";
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "/reports",
-            element: <div className="p-8">Reports (Coming Soon)</div>,
+            element: <Reports />,
           },
         ],
       },

@@ -17,6 +17,16 @@ router.use(authenticate);
 router.get("/", validate(GetTasksQuerySchema), controller.getTasks);
 router.get("/:id", controller.getTaskById);
 
+import {
+  uploadAttachment,
+  getAttachments,
+} from "../attachment/attachment.controller.js";
+import { upload } from "../attachment/attachment.middleware.js";
+
+// Attachment routes
+router.post("/:taskId/attachments", upload.single("file"), uploadAttachment);
+router.get("/:taskId/attachments", getAttachments);
+
 // Only ADMIN can create, update, or delete tasks
 router.post(
   "/",
