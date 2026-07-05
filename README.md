@@ -1,339 +1,91 @@
 # Employee Task Management System
 
-A full-stack Employee Task Management System built as part of a Full Stack Developer assessment. The application enables administrators to manage employees and tasks while allowing employees to track and update their assigned work.
-
-The project is built using a modern MERN-inspired architecture with React, Express, TypeScript, MySQL, and Prisma in a Turborepo monorepo.
+A full-stack Employee Task Management System built with React, Express, TypeScript, MySQL, and Prisma in a Turborepo monorepo. It features role-based access control, comprehensive task tracking, employee management, real-time notifications, file attachments, and reporting.
 
 ---
 
 ## 🚀 Tech Stack
 
-### Frontend
-
-- React
-- TypeScript
-- React Router
-- Redux Toolkit
-- TanStack Query
-- Tailwind CSS
-- React Hook Form
-
-### Backend
-
-- Node.js
-- Express.js
-- TypeScript
-- Prisma ORM
-- MySQL
-- JWT Authentication
-- Multer (File Uploads)
-
-### Development & Tooling
-
-- Turborepo
-- ESLint
-- Prettier
-- Husky
-- lint-staged
+- **Frontend**: React, TypeScript, React Router, Redux Toolkit, TanStack Query, Tailwind CSS, React Hook Form
+- **Backend**: Node.js, Express.js, TypeScript, Prisma ORM, MySQL, JWT Authentication, Multer
+- **Tooling**: Turborepo, ESLint, Prettier, Husky, lint-staged
 
 ---
 
-## 📂 Project Structure
+## ⚙️ Setup & Installation
 
-```text
-employee-task-management/
-│
-├── apps/
-│   ├── client/              # React application
-│   └── server/              # Express API
-│
-├── packages/                # Shared packages/configurations
-│
-├── docs/
-│   ├── database-schema.md
-│   ├── backend-architecture.md
-│   └── architecture-diagram.drawio
-│
-├── package.json
-├── turbo.json
-└── README.md
-```
+### 1. Prerequisites
 
----
+- **Node.js** (v24.14.0 or matching Prisma requirements: `20.19+`, `22.12+`, `24.0+`)
+- **MySQL** Server
 
-## ✨ Features
-
-### Authentication
-
-- User Registration
-- User Login
-- JWT Authentication
-- Remember Me
-- Logout
-- Role-based Access Control (Admin & Employee)
-
-### Dashboard
-
-#### Admin
-
-- Total Employees
-- Total Tasks
-- Completed Tasks
-- Pending Tasks
-
-#### Employee
-
-- My Tasks
-- Completed Tasks
-- Pending Tasks
-- Overdue Tasks
-
-### Employee Management
-
-- Create Employee
-- Update Employee
-- Delete Employee
-- Search Employees
-- Sort Employees
-- Pagination
-
-### Task Management
-
-- Create Tasks
-- Assign Tasks
-- Update Tasks
-- Delete Tasks
-- View Tasks
-- Status Management
-- Priority Management
-
-### Notifications
-
-- Task Assigned
-- Due Soon
-- Task Completed
-
-### File Upload
-
-- PDF
-- JPG
-- PNG
-- Maximum File Size: 5 MB
-
-### Reports
-
-- Completed Tasks
-- Pending Tasks
-- Employee-wise Tasks
-- Export to Excel
-- Export to CSV
-
----
-
-## 🗄 Database
-
-Database: **MySQL**
-
-ORM: **Prisma**
-
-Main Entities:
-
-- Users
-- Employees
-- Tasks
-- Notifications
-- Attachments
-
-Refer to `docs/database-schema.md` for the complete schema.
-
----
-
-## 🏗 Backend Architecture
-
-The backend follows a modular architecture.
-
-```text
-src/
-│
-├── config/
-├── modules/
-│   ├── auth/
-│   ├── employees/
-│   ├── tasks/
-│   ├── dashboard/
-│   ├── reports/
-│   └── notifications/
-│
-├── middleware/
-├── routes/
-├── shared/
-│
-├── app.ts
-└── server.ts
-```
-
-Each module contains:
-
-```text
-controller
-service
-repository
-validation
-routes
-types
-```
-
----
-
-## ⚙️ Installation
-
-### Clone the repository
+### 2. Clone and Install Dependencies
 
 ```bash
 git clone <repository-url>
 cd employee-task-management
-```
 
-### Install dependencies
-
-```bash
+# Install dependencies for all workspaces
 npm install
 ```
 
-### Install dependencies for all workspaces
+### 3. Environment Configuration
 
-```bash
-npm install --workspaces
-```
-
----
-
-## 🔧 Environment Variables
-
-Create a `.env` file inside `apps/server`.
+Create a `.env` file in `apps/server`:
 
 ```env
 DATABASE_URL=mysql://root:password@localhost:3306/task_management
-
 JWT_SECRET=your_secret_key
-
-PORT=5000
+PORT=3000
 ```
 
----
+### 4. Database Initialization
 
-## 🛢 Database Setup
-
-Create the database.
-
-```sql
-CREATE DATABASE task_management;
-```
-
-Generate the Prisma client.
+Run the following commands to create the database schema and generate the Prisma client:
 
 ```bash
+# Enter the server workspace
+cd apps/server
+
+# Push the schema to the database (or use migrate dev)
+npx prisma db push
+
+# Generate Prisma Client
 npx prisma generate
 ```
 
-Run migrations.
+### 5. Running the Application
+
+Return to the root directory to start the monorepo:
 
 ```bash
-npx prisma migrate dev
-```
-
----
-
-## ▶️ Running the Project
-
-Start all applications.
-
-```bash
+cd ../..
 npm run dev
 ```
 
-Build all applications.
-
-```bash
-npm run build
-```
+- **Frontend**: Runs on `http://localhost:5173` (Vite Default)
+- **Backend**: Runs on `http://localhost:3000`
 
 ---
 
-## 🧹 Code Quality
+## ✨ Key Features
 
-Run ESLint.
-
-```bash
-npm run lint
-```
-
-Automatically fix lint issues.
-
-```bash
-npm run lint:fix
-```
-
-Format the project.
-
-```bash
-npm run format
-```
+- **Role-Based Access**: Admins manage employees and all tasks. Employees view and update their assigned tasks.
+- **Task Management**: Create, assign, update status/priority, and filter tasks.
+- **Reporting**: Dynamic dashboards and exportable CSV/Excel reports.
+- **Attachments**: Secure file uploading (PDF, JPG, PNG).
+- **Notifications**: Automated alerts for newly assigned, due soon, and completed tasks.
 
 ---
 
-## 📋 API Modules
+## 🧹 Code Quality Commands
 
-### Authentication
+From the project root:
 
-- POST /register
-- POST /login
-- POST /logout
-
-### Employees
-
-- GET /employees
-- GET /employees/:id
-- POST /employees
-- PUT /employees/:id
-- DELETE /employees/:id
-
-### Tasks
-
-- GET /tasks
-- GET /tasks/:id
-- POST /tasks
-- PUT /tasks/:id
-- DELETE /tasks/:id
-
-### Reports
-
-- GET /reports
+- `npm run lint` - Run ESLint across all workspaces.
+- `npm run lint:fix` - Automatically fix lint errors.
+- `npm run format` - Format the project with Prettier.
 
 ---
 
-## 📌 Business Rules
-
-- Email must be unique.
-- Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number.
-- Due Date cannot be earlier than Start Date.
-- Completed tasks cannot be edited.
-- Employees can only access their own tasks.
-- Administrators can access all employees and tasks.
-
----
-
-## 📄 Deliverables
-
-- Source Code
-- Database Schema
-- Architecture Diagram
-- README
-- SQL Script
-- Demo Video
-
----
-
-## 👨‍💻 Author
-
-**Om Poonjani**
+**Author:** Om Poonjani
