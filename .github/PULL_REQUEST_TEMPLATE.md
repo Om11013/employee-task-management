@@ -55,14 +55,6 @@
 
 ## 🧪 Testing
 
-### Manual Testing
-
-Describe how this was tested.
-
-1.
-2.
-3.
-
 ### Automated Testing
 
 - [ ] Unit Tests
